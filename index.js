@@ -87,7 +87,7 @@ function success(message = null) {
  * @returns {string} The presentable name.
  */
 function presentableName(user) {
-  return user.displayName || user.email || user.uid;
+  return user.displayName || user.email || user.phoneNumber || user.uid;
 }
 
 /**
@@ -362,7 +362,11 @@ program
   .description("retrieves info for each user", {
     ids: "comma-separated emails, phone numbers, or uids",
   })
-  .action((ids) => {
+  .option(
+    "-d --detailed",
+    "include custom claims, creation and last sign-in time"
+  )
+  .action((ids, options) => {
     const getReqs = [];
 
     ids.split(",").forEach((id) => {
@@ -384,18 +388,31 @@ program
             return;
           }
 
-          tableData.push({
+          let userData = {
             uid: user.uid,
             email: user.email,
             emailVerified: user.emailVerified,
-            phoneNumber: user.phoneNumber,
             displayName: user.displayName,
+            phoneNumber: user.phoneNumber,
             disabled: user.disabled,
-            customClaims: user.customClaims,
-          });
+          };
+
+          if (options.detailed) {
+            userData = {
+              ...userData,
+              customClaims: user.customClaims,
+              creationTime: user.metadata.creationTime,
+              lastSignInTime: user.metadata.lastSignInTime,
+            };
+          }
+
+          tableData.push(userData);
         });
 
-        console.table(tableData);
+        if (tableData.length) {
+          console.table(tableData);
+        }
+
         success();
       })
       .catch((reason) => {
