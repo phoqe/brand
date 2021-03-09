@@ -52,7 +52,7 @@ function isPhoneNumber(input) {
 /**
  * Shorthand function for exiting the program with an error.
  *
- * @param {object} reason The reason object provided from a Firebase operation.
+ * @param {admin.FirebaseError} reason The reason object provided from a Firebase operation.
  */
 function error(reason) {
   console.log(reason.message);
@@ -65,7 +65,10 @@ function error(reason) {
  * @param {string} message The message to display to the user upon exit.
  */
 function success(message) {
-  console.log(message);
+  if (message) {
+    console.log(message);
+  }
+
   process.exit(0);
 }
 
@@ -78,8 +81,8 @@ function success(message) {
  * 2. `email`
  * 3. `uid`
  *
- * @param {object} user The user record from which to determine the presentable name.
- * @returns {String} The presentable name.
+ * @param {admin.auth.UserRecord} user The user record from which to determine the presentable name.
+ * @returns {string} The presentable name.
  */
 function presentableName(user) {
   return user.displayName || user.email || user.uid;
@@ -157,17 +160,47 @@ function getUidById(id) {
 }
 
 program
-  .command("disable <id>")
+  .command("disable <ids>")
   .aliases(["ban", "suspend"])
-  .description("prevents the user from signing in", {
-    id: "email, phone number, and uid",
+  .description("prevents the users from signing in", {
+    ids: "comma-separated emails, phone numbers, and uids",
   })
-  .action((id) => {
-    getUidById(id)
-      .then((uid) => {
-        toggleUserAccess(uid, true)
-          .then((user) => {
-            success(__("Disabled user %s.", presentableName(user)));
+  .action((ids) => {
+    const uidReqs = [];
+
+    ids.split(",").forEach((id) => {
+      const req = getUidById(id).catch((reason) => {
+        console.log(__("Couldn't fetch UID for ID %s: %s", id, reason.message));
+      });
+
+      uidReqs.push(req);
+    });
+
+    Promise.all(uidReqs)
+      .then((uids) => {
+        const toggleReqs = [];
+
+        uids.forEach((uid) => {
+          if (!uid) {
+            return;
+          }
+
+          const req = toggleUserAccess(uid, true)
+            .then((user) => {
+              console.log(__("Disabled user %s.", presentableName(user)));
+            })
+            .catch((reason) => {
+              console.log(
+                __("Couldn't disable user %s: %s", uid, reason.message)
+              );
+            });
+
+          toggleReqs.push(req);
+        });
+
+        Promise.all(toggleReqs)
+          .then(() => {
+            success();
           })
           .catch((reason) => {
             error(reason);
