@@ -2,6 +2,8 @@ const admin = require("firebase-admin");
 const { program } = require("commander");
 const { I18n } = require("i18n");
 const path = require("path");
+const inquirer = require("inquirer");
+
 const package = require("./package.json");
 
 require("dotenv").config();
@@ -375,14 +377,14 @@ program
 
     Promise.all(getReqs)
       .then((users) => {
-        const data = [];
+        const tableData = [];
 
         users.forEach((user) => {
           if (!user) {
             return;
           }
 
-          data.push({
+          tableData.push({
             uid: user.uid,
             email: user.email,
             emailVerified: user.emailVerified,
@@ -393,13 +395,87 @@ program
           });
         });
 
-        console.table(data);
-
+        console.table(tableData);
         success();
       })
       .catch((reason) => {
         error(reason);
       });
   });
+
+// program
+//   .command("update <ids>")
+//   .aliases(["change"])
+//   .description("updates user data", {
+//     ids: "comma-separated emails, phone numbers, or uids",
+//   })
+//   .action((ids) => {
+//     const getReqs = [];
+
+//     ids.split(",").forEach((id) => {
+//       const req = getUserById(id).catch((reason) => {
+//         console.log(
+//           __("Couldn't fetch user for ID %s: %s", id, reason.message)
+//         );
+//       });
+
+//       getReqs.push(req);
+//     });
+
+//     Promise.all(getReqs)
+//       .then((users) => {
+//         users.forEach((user) => {
+//           if (!user) {
+//             return;
+//           }
+
+//           inquirer
+//             .prompt([
+//               {
+//                 type: "input",
+//                 name: "email",
+//                 default: user.email,
+//               },
+//               {
+//                 type: "confirm",
+//                 name: "emailVerified",
+//                 default: user.emailVerified,
+//               },
+//               {
+//                 type: "input",
+//                 name: "displayName",
+//                 default: user.displayName,
+//               },
+//               {
+//                 type: "input",
+//                 name: "photoURL",
+//                 default: user.photoURL,
+//               },
+//               {
+//                 type: "confirm",
+//                 name: "disabled",
+//                 default: user.disabled,
+//               },
+//             ])
+//             .then((newUser) => {
+//               const tableData = [];
+
+//               console.table(tableData);
+//             })
+//             .catch((reason) => {
+//               console.log(
+//                 __(
+//                   "Couldn't update user %s: %s",
+//                   presentableName(user),
+//                   reason.message
+//                 )
+//               );
+//             });
+//         });
+//       })
+//       .catch((reason) => {
+//         error(reason);
+//       });
+//   });
 
 program.parse(process.argv);
