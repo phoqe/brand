@@ -1,7 +1,9 @@
 {
-	"Disabled user %s.": "Disabled user %s.",
-	"Enabled user %s.": "Enabled user %s.",
-	"Deleted user %s.": "Deleted user %s.",
-	"Couldn't fetch UID for ID %s: %s": "Couldn't fetch UID for ID %s: %s",
-	"Couldn't disable user %s: %s": "Couldn't disable user %s: %s"
+  "Disabled user %s.": "Disabled user %s.",
+  "Enabled user %s.": "Enabled user %s.",
+  "Deleted user %s.": "Deleted user %s.",
+  "Couldn't fetch UID for ID %s: %s": "Couldn't fetch UID for ID %s: %s",
+  "Couldn't disable user %s: %s": "Couldn't disable user %s: %s",
+  "Couldn't enable user %s: %s": "Couldn't enable user %s: %s",
+  "Couldn't delete user %s: %s": "Couldn't delete user %s: %s"
 }

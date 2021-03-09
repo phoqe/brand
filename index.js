@@ -212,17 +212,47 @@ program
   });
 
 program
-  .command("enable <id>")
+  .command("enable <ids>")
   .aliases(["unban"])
-  .description("allows the user to sign in", {
-    id: "email, phone number, or uid",
+  .description("allows the users to sign in", {
+    ids: "comma-separated emails, phone numbers, and uids",
   })
-  .action((id) => {
-    getUidById(id)
-      .then((uid) => {
-        toggleUserAccess(uid, false)
-          .then((user) => {
-            success(__("Enabled user %s.", presentableName(user)));
+  .action((ids) => {
+    const uidReqs = [];
+
+    ids.split(",").forEach((id) => {
+      const req = getUidById(id).catch((reason) => {
+        console.log(__("Couldn't fetch UID for ID %s: %s", id, reason.message));
+      });
+
+      uidReqs.push(req);
+    });
+
+    Promise.all(uidReqs)
+      .then((uids) => {
+        const toggleReqs = [];
+
+        uids.forEach((uid) => {
+          if (!uid) {
+            return;
+          }
+
+          const req = toggleUserAccess(uid, false)
+            .then((user) => {
+              console.log(__("Enabled user %s.", presentableName(user)));
+            })
+            .catch((reason) => {
+              console.log(
+                __("Couldn't enable user %s: %s", uid, reason.message)
+              );
+            });
+
+          toggleReqs.push(req);
+        });
+
+        Promise.all(toggleReqs)
+          .then(() => {
+            success();
           })
           .catch((reason) => {
             error(reason);
@@ -234,17 +264,47 @@ program
   });
 
 program
-  .command("delete <id>")
+  .command("delete <ids>")
   .aliases(["remove"])
-  .description("deletes a user permanently from the app", {
-    id: "email, phone number, or uid",
+  .description("deletes users permanently from the app", {
+    ids: "comma-separated emails, phone numbers, or uids",
   })
-  .action((id) => {
-    getUidById(id)
-      .then((uid) => {
-        deleteUser(uid)
+  .action((ids) => {
+    const uidReqs = [];
+
+    ids.split(",").forEach((id) => {
+      const req = getUidById(id).catch((reason) => {
+        console.log(__("Couldn't fetch UID for ID %s: %s", id, reason.message));
+      });
+
+      uidReqs.push(req);
+    });
+
+    Promise.all(uidReqs)
+      .then((uids) => {
+        const toggleReqs = [];
+
+        uids.forEach((uid) => {
+          if (!uid) {
+            return;
+          }
+
+          const req = deleteUser(uid)
+            .then(() => {
+              console.log(__("Deleted user %s.", uid));
+            })
+            .catch((reason) => {
+              console.log(
+                __("Couldn't delete user %s: %s", uid, reason.message)
+              );
+            });
+
+          toggleReqs.push(req);
+        });
+
+        Promise.all(toggleReqs)
           .then(() => {
-            success(__("Deleted user %s.", uid));
+            success();
           })
           .catch((reason) => {
             error(reason);

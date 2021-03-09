@@ -3,5 +3,7 @@
   "Enabled user %s.": "Tillät användare %s att logga in igen.",
   "Deleted user %s.": "Tog bort användare %s.",
   "Couldn't fetch UID for ID %s: %s": "Kunde inte hämta UID för ID %s: %s",
-  "Couldn't disable user %s: %s": "Kunde inte stänga av användare %s: %s"
+  "Couldn't disable user %s: %s": "Kunde inte stänga av användare %s: %s",
+  "Couldn't enable user %s: %s": "Kude inte tillåta användare %s: %s",
+  "Couldn't delete user %s: %s": "Kunde inte ta bort användare %s: %s"
 }
