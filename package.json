@@ -1,0 +1,16 @@
+{
+  "name": "brand",
+  "version": "1.0.0",
+  "description": "The missing CLI for Firebase apps.",
+  "main": "index.js",
+  "repository": "https://github.com/phoqe/brand.git",
+  "author": "Linus Långberg <phoqe@phoqe.dev>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "commander": "^7.1.0",
+    "dotenv": "^8.2.0",
+    "firebase-admin": "^9.5.0",
+    "i18n": "^0.13.2"
+  }
+}

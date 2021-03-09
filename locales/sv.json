@@ -1,0 +1,5 @@
+{
+  "Disabled user %s.": "Stängde av användare %s från att logga in.",
+  "Enabled user %s.": "Tillät användare %s att logga in igen.",
+  "Deleted user %s.": "Tog bort användare %s."
+}
