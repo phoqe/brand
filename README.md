@@ -10,7 +10,9 @@ The missing CLI for Firebase apps.
 
 ### Locale
 
-You can set locale with the `DEFAULT_LOCALE` environment variable. Supported locales:
+You can set the locale of Brand with the `DEFAULT_LOCALE` environment variable. The locale will only affect the output of the commands, not your Firebase app.
+
+Supported locales:
 
 - `en` (Default)
 - `sv`
