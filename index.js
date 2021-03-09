@@ -64,7 +64,7 @@ function error(reason) {
  *
  * @param {string} message The message to display to the user upon exit.
  */
-function success(message) {
+function success(message = null) {
   if (message) {
     console.log(message);
   }
@@ -155,6 +155,45 @@ function getUidById(id) {
         });
     } else {
       resolve(id);
+    }
+  });
+}
+
+/**
+ * Retreives a user record from a phone number or email.
+ *
+ * @param {string} id The identifier of the user.
+ * @returns {Promise<admin.auth.UserRecord>} A promise with the user record.
+ */
+function getUserById(id) {
+  return new Promise((resolve, reject) => {
+    if (isEmail(id)) {
+      auth
+        .getUserByEmail(id)
+        .then((user) => {
+          resolve(user);
+        })
+        .catch((reason) => {
+          reject(reason);
+        });
+    } else if (isPhoneNumber(id)) {
+      auth
+        .getUserByPhoneNumber(id)
+        .then((user) => {
+          resolve(user);
+        })
+        .catch((reason) => {
+          reject(reason);
+        });
+    } else {
+      auth
+        .getUser(id)
+        .then((user) => {
+          resolve(user);
+        })
+        .catch((reason) => {
+          reject(reason);
+        });
     }
   });
 }
@@ -309,6 +348,54 @@ program
           .catch((reason) => {
             error(reason);
           });
+      })
+      .catch((reason) => {
+        error(reason);
+      });
+  });
+
+program
+  .command("get <ids>")
+  .aliases(["fetch", "retrieve"])
+  .description("retrieves info for each user", {
+    ids: "comma-separated emails, phone numbers, or uids",
+  })
+  .action((ids) => {
+    const getReqs = [];
+
+    ids.split(",").forEach((id) => {
+      const req = getUserById(id).catch((reason) => {
+        console.log(
+          __("Couldn't fetch user for ID %s: %s", id, reason.message)
+        );
+      });
+
+      getReqs.push(req);
+    });
+
+    Promise.all(getReqs)
+      .then((users) => {
+        const data = [];
+
+        users.forEach((user) => {
+          if (!user) {
+            return;
+          }
+
+          data.push({
+            uid: user.uid,
+            email: user.email,
+            emailVerified: user.emailVerified,
+            phoneNumber: user.phoneNumber,
+            displayName: user.displayName,
+            disabled: user.disabled,
+            customClaims: user.customClaims,
+          });
+        });
+
+        console.table(data);
+
+        success();
       })
       .catch((reason) => {
         error(reason);
