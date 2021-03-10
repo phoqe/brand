@@ -200,6 +200,38 @@ function getUserById(id) {
   });
 }
 
+/**
+ * Updates a user with new properites.
+ *
+ * @param {string} uid The UID of the user to update.
+ * @param {object} newUser An object consisting of properties for the new user.
+ * @returns {Promise<admin.auth.UserRecord>} A promise containing the updated user record.
+ */
+function updateUser(uid, newUser) {
+  return new Promise((resolve, reject) => {
+    const email = newUser.email || undefined;
+    const emailVerified = newUser.emailVerified || undefined;
+    const displayName = newUser.displayName || undefined;
+    const photoURL = newUser.photoURL || undefined;
+    const disabled = newUser.disabled || undefined;
+
+    auth
+      .updateUser(uid, {
+        email,
+        emailVerified,
+        displayName,
+        photoURL,
+        disabled,
+      })
+      .then((user) => {
+        resolve(user);
+      })
+      .catch((reason) => {
+        reject(reason);
+      });
+  });
+}
+
 program
   .command("disable <ids>")
   .aliases(["ban", "suspend"])
@@ -420,79 +452,83 @@ program
       });
   });
 
-// program
-//   .command("update <ids>")
-//   .aliases(["change"])
-//   .description("updates user data", {
-//     ids: "comma-separated emails, phone numbers, or uids",
-//   })
-//   .action((ids) => {
-//     const getReqs = [];
+program
+  .command("update <ids>")
+  .aliases(["change"])
+  .description("updates user data", {
+    ids: "comma-separated emails, phone numbers, or uids",
+  })
+  .action((ids) => {
+    const getReqs = [];
 
-//     ids.split(",").forEach((id) => {
-//       const req = getUserById(id).catch((reason) => {
-//         console.log(
-//           __("Couldn't fetch user for ID %s: %s", id, reason.message)
-//         );
-//       });
+    ids.split(",").forEach((id) => {
+      const req = getUserById(id).catch((reason) => {
+        console.log(
+          __("Couldn't fetch user for ID %s: %s", id, reason.message)
+        );
+      });
 
-//       getReqs.push(req);
-//     });
+      getReqs.push(req);
+    });
 
-//     Promise.all(getReqs)
-//       .then((users) => {
-//         users.forEach((user) => {
-//           if (!user) {
-//             return;
-//           }
+    Promise.all(getReqs)
+      .then((users) => {
+        users.forEach((user) => {
+          if (!user) {
+            return;
+          }
 
-//           inquirer
-//             .prompt([
-//               {
-//                 type: "input",
-//                 name: "email",
-//                 default: user.email,
-//               },
-//               {
-//                 type: "confirm",
-//                 name: "emailVerified",
-//                 default: user.emailVerified,
-//               },
-//               {
-//                 type: "input",
-//                 name: "displayName",
-//                 default: user.displayName,
-//               },
-//               {
-//                 type: "input",
-//                 name: "photoURL",
-//                 default: user.photoURL,
-//               },
-//               {
-//                 type: "confirm",
-//                 name: "disabled",
-//                 default: user.disabled,
-//               },
-//             ])
-//             .then((newUser) => {
-//               const tableData = [];
-
-//               console.table(tableData);
-//             })
-//             .catch((reason) => {
-//               console.log(
-//                 __(
-//                   "Couldn't update user %s: %s",
-//                   presentableName(user),
-//                   reason.message
-//                 )
-//               );
-//             });
-//         });
-//       })
-//       .catch((reason) => {
-//         error(reason);
-//       });
-//   });
+          inquirer
+            .prompt([
+              {
+                type: "input",
+                name: "email",
+                default: user.email,
+              },
+              {
+                type: "confirm",
+                name: "emailVerified",
+                default: user.emailVerified,
+              },
+              {
+                type: "input",
+                name: "displayName",
+                default: user.displayName,
+              },
+              {
+                type: "input",
+                name: "photoURL",
+                default: user.photoURL,
+              },
+              {
+                type: "confirm",
+                name: "disabled",
+                default: user.disabled,
+              },
+            ])
+            .then((newUser) => {
+              updateUser(user.uid, newUser)
+                .then((user) => {
+                  success(__("Updated user %s.", presentableName(user)));
+                })
+                .catch((reason) => {
+                  error(reason);
+                });
+            })
+            .catch((reason) => {
+              console.log(
+                __(
+                  "Couldn't update user %s: %s",
+                  presentableName(user),
+                  reason.message
+                )
+              );
+            });
+        });
+      })
+      .catch((reason) => {
+        error(reason);
+      });
+  });
 
 program.parse(process.argv);

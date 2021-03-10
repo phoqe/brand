@@ -6,5 +6,6 @@
   "Couldn't disable user %s: %s": "Kunde inte stänga av användare %s: %s",
   "Couldn't enable user %s: %s": "Kude inte tillåta användare %s: %s",
   "Couldn't delete user %s: %s": "Kunde inte ta bort användare %s: %s",
-  "Couldn't fetch user for ID %s: %s": "Kunde inte hämta användare ID %s: %s"
+  "Couldn't fetch user for ID %s: %s": "Kunde inte hämta användare ID %s: %s",
+  "Updated user %s.": "Uppdaterade användare %s."
 }
