@@ -212,6 +212,7 @@ function updateUser(uid, newUser) {
     const email = newUser.email || undefined;
     const emailVerified = newUser.emailVerified || undefined;
     const displayName = newUser.displayName || undefined;
+    const phoneNumber = newUser.phoneNumber || undefined;
     const photoURL = newUser.photoURL || undefined;
     const disabled = newUser.disabled || undefined;
 
@@ -220,6 +221,7 @@ function updateUser(uid, newUser) {
         email,
         emailVerified,
         displayName,
+        phoneNumber,
         photoURL,
         disabled,
       })
@@ -494,6 +496,11 @@ program
                 type: "input",
                 name: "displayName",
                 default: user.displayName,
+              },
+              {
+                type: "input",
+                name: "phoneNumber",
+                default: user.phoneNumber,
               },
               {
                 type: "input",
