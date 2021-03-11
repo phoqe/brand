@@ -3,6 +3,7 @@ const { program } = require("commander");
 const { I18n } = require("i18n");
 const path = require("path");
 const inquirer = require("inquirer");
+const faker = require("faker");
 
 const package = require("./package.json");
 
@@ -14,12 +15,14 @@ admin.initializeApp({
 
 const auth = admin.auth();
 
-new I18n({
+const i18n = new I18n({
   locales: ["en", "sv"],
   directory: path.join(__dirname, "locales"),
   defaultLocale: process.env.DEFAULT_LOCALE,
   register: global,
 });
+
+faker.locale = i18n.getLocale();
 
 program.name(package.name);
 program.version(package.version);
@@ -63,8 +66,11 @@ function isPhoneNumber(input) {
  *
  * @param {admin.FirebaseError} reason The reason object provided from a Firebase operation.
  */
-function error(reason) {
-  console.log(reason.message);
+function error(message) {
+  if (message) {
+    console.log(message);
+  }
+
   process.exit(1);
 }
 
@@ -246,6 +252,41 @@ function updateUser(uid, newUser) {
   });
 }
 
+/**
+ * Creates a new user with the specified information.
+ *
+ * @param {object} newUser The new user to create.
+ * @returns {Promise<admin.auth.UserRecord>} A promise containing the created user.
+ */
+function createUser(newUser) {
+  return new Promise((resolve, reject) => {
+    const uid = newUser.uid || undefined;
+    const email = newUser.email || undefined;
+    const emailVerified = newUser.emailVerified || undefined;
+    const displayName = newUser.displayName || undefined;
+    const phoneNumber = newUser.phoneNumber || undefined;
+    const photoURL = newUser.photoURL || undefined;
+    const disabled = newUser.disabled || undefined;
+
+    auth
+      .createUser({
+        uid,
+        email,
+        emailVerified,
+        displayName,
+        phoneNumber,
+        photoURL,
+        disabled,
+      })
+      .then((user) => {
+        resolve(user);
+      })
+      .catch((reason) => {
+        reject(reason);
+      });
+  });
+}
+
 program
   .command("disable <ids>")
   .aliases(["ban", "suspend"])
@@ -290,11 +331,11 @@ program
             success();
           })
           .catch((reason) => {
-            error(reason);
+            error(reason.message);
           });
       })
       .catch((reason) => {
-        error(reason);
+        error(reason.message);
       });
   });
 
@@ -342,11 +383,11 @@ program
             success();
           })
           .catch((reason) => {
-            error(reason);
+            error(reason.message);
           });
       })
       .catch((reason) => {
-        error(reason);
+        error(reason.message);
       });
   });
 
@@ -394,11 +435,11 @@ program
             success();
           })
           .catch((reason) => {
-            error(reason);
+            error(reason.message);
           });
       })
       .catch((reason) => {
-        error(reason);
+        error(reason.message);
       });
   });
 
@@ -462,7 +503,7 @@ program
         success();
       })
       .catch((reason) => {
-        error(reason);
+        error(reason.message);
       });
   });
 
@@ -514,7 +555,7 @@ program
                 success(__("Updated user %s.", presentableName(user)));
               })
               .catch((reason) => {
-                error(reason);
+                error(reason.message);
               });
           })
           .catch((reason) => {
@@ -528,7 +569,87 @@ program
           });
       })
       .catch((reason) => {
-        error(reason);
+        error(reason.message);
+      });
+  });
+
+program
+  .command("create")
+  .aliases(["add", "new"])
+  .description("creates a new user")
+  .option("-f, --fake", "use fake data")
+  .action((opts) => {
+    if (opts.fake) {
+      const newUser = {
+        email: faker.internet.email(),
+        emailVerified: false,
+        password: faker.internet.password(),
+        displayName: faker.internet.userName(),
+        photoURL: faker.image.avatar(),
+        disabled: false,
+      };
+
+      createUser(newUser)
+        .then((user) => {
+          success(__("Created user %s.", presentableName(user)));
+        })
+        .catch((reason) => {
+          error(reason.message);
+        });
+
+      return;
+    }
+
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          name: "uid",
+        },
+        {
+          type: "input",
+          name: "email",
+        },
+        {
+          type: "confirm",
+          name: "emailVerified",
+          default: false,
+        },
+        {
+          type: "input",
+          name: "password",
+        },
+        {
+          type: "input",
+          name: "displayName",
+        },
+        {
+          type: "input",
+          name: "photoURL",
+        },
+        {
+          type: "confirm",
+          name: "disabled",
+          default: false,
+        },
+      ])
+      .then((newUser) => {
+        createUser(newUser)
+          .then((user) => {
+            success(__("Created user %s.", presentableName(user)));
+          })
+          .catch((reason) => {
+            error(reason.message);
+          });
+      })
+      .catch((reason) => {
+        console.log(
+          __(
+            "Couldn't update user %s: %s",
+            presentableName(user),
+            reason.message
+          )
+        );
       });
   });
 
