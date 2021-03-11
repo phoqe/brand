@@ -81,7 +81,8 @@ function success(message = null) {
  *
  * 1. `displayName`
  * 2. `email`
- * 3. `uid`
+ * 3. `phoneNumber`
+ * 4. `uid`
  *
  * @param {admin.auth.UserRecord} user The user record from which to determine the presentable name.
  * @returns {string} The presentable name.
@@ -455,83 +456,65 @@ program
   });
 
 program
-  .command("update <ids>")
+  .command("update <id>")
   .aliases(["change"])
-  .description("updates user data", {
-    ids: "comma-separated emails, phone numbers, or uids",
+  .description("updates the user's data", {
+    ids: "email, phone number, or uid",
   })
-  .action((ids) => {
-    const getReqs = [];
-
-    ids.split(",").forEach((id) => {
-      const req = getUserById(id).catch((reason) => {
-        console.log(
-          __("Couldn't fetch user for ID %s: %s", id, reason.message)
-        );
-      });
-
-      getReqs.push(req);
-    });
-
-    Promise.all(getReqs)
-      .then((users) => {
-        users.forEach((user) => {
-          if (!user) {
-            return;
-          }
-
-          inquirer
-            .prompt([
-              {
-                type: "input",
-                name: "email",
-                default: user.email,
-              },
-              {
-                type: "confirm",
-                name: "emailVerified",
-                default: user.emailVerified,
-              },
-              {
-                type: "input",
-                name: "displayName",
-                default: user.displayName,
-              },
-              {
-                type: "input",
-                name: "phoneNumber",
-                default: user.phoneNumber,
-              },
-              {
-                type: "input",
-                name: "photoURL",
-                default: user.photoURL,
-              },
-              {
-                type: "confirm",
-                name: "disabled",
-                default: user.disabled,
-              },
-            ])
-            .then((newUser) => {
-              updateUser(user.uid, newUser)
-                .then((user) => {
-                  success(__("Updated user %s.", presentableName(user)));
-                })
-                .catch((reason) => {
-                  error(reason);
-                });
-            })
-            .catch((reason) => {
-              console.log(
-                __(
-                  "Couldn't update user %s: %s",
-                  presentableName(user),
-                  reason.message
-                )
-              );
-            });
-        });
+  .action((id) => {
+    getUserById(id)
+      .then((user) => {
+        inquirer
+          .prompt([
+            {
+              type: "input",
+              name: "email",
+              default: user.email,
+            },
+            {
+              type: "confirm",
+              name: "emailVerified",
+              default: user.emailVerified,
+            },
+            {
+              type: "input",
+              name: "displayName",
+              default: user.displayName,
+            },
+            {
+              type: "input",
+              name: "phoneNumber",
+              default: user.phoneNumber,
+            },
+            {
+              type: "input",
+              name: "photoURL",
+              default: user.photoURL,
+            },
+            {
+              type: "confirm",
+              name: "disabled",
+              default: user.disabled,
+            },
+          ])
+          .then((newUser) => {
+            updateUser(user.uid, newUser)
+              .then((user) => {
+                success(__("Updated user %s.", presentableName(user)));
+              })
+              .catch((reason) => {
+                error(reason);
+              });
+          })
+          .catch((reason) => {
+            console.log(
+              __(
+                "Couldn't update user %s: %s",
+                presentableName(user),
+                reason.message
+              )
+            );
+          });
       })
       .catch((reason) => {
         error(reason);
