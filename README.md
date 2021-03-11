@@ -6,7 +6,7 @@ The missing CLI for Firebase apps.
 
 ### Service Account
 
-`GOOGLE_APPLICATION_CREDENTIAL`
+Set `GOOGLE_APPLICATION_CREDENTIAL` to the path of your Service Account key.
 
 ### Locale
 
@@ -14,7 +14,7 @@ You can set the locale of Brand with the `DEFAULT_LOCALE` environment variable. 
 
 Supported locales:
 
-- `en` (Default)
+- `en` (default)
 - `sv`
 
 ### Usage
@@ -31,6 +31,7 @@ brand --help
 - Dashboard
   - Firebase-like
 - Database Structure Support
+  - Automatic Exploration
 - Advanced Email Sending
 
 ## License
