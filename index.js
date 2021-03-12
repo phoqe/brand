@@ -35,7 +35,7 @@ program.option("-p, --phone-number", "only use phone number as id");
  * Returns whether or not the user is using an email in their input.
  * This method should not be used for validation, only convenience.
  *
- * Use the global options `email` or `phone-number` if you have any trouble.
+ * Use the global options `--email` or `--phone-number` if you have any trouble.
  *
  * @param {string} input The input from the user.
  * @return {boolean} Whether the input passed the regular expression.
@@ -50,7 +50,7 @@ function isEmail(input) {
  * Returns whether the user has inputted a phone number.
  * This method should not be used for validation, only convenience.
  *
- * Use the global options `email` or `phone-number` if you have any trouble.
+ * Use the global options `--email` or `--phone-number` if you have any trouble.
  *
  * @param {string} input The input from the user.
  * @returns {boolean} Whether the input is a phone number.
