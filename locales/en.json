@@ -8,5 +8,7 @@
   "Couldn't delete user %s: %s": "Couldn't delete user %s: %s",
   "Couldn't fetch user for ID %s: %s": "Couldn't fetch user for ID %s: %s",
   "Updated user %s.": "Updated user %s.",
-  "Created user %s.": "Created user %s."
+  "Created user %s.": "Created user %s.",
+  "Couldn't revoke user %s: %s": "Couldn't revoke refresh tokens for user %s: %s",
+  "Revoked refresh tokens for user %s.": "Revoked refresh tokens for user %s."
 }

@@ -287,6 +287,83 @@ function createUser(newUser) {
   });
 }
 
+/**
+ * Revokes the user's refresh token. They may still have access to your app for one hour
+ * since the last token has already been minted.
+ *
+ * @param {string} uid The UID of the user to revoke the refresh tokens from.
+ * @returns {Promise<void>} A void promise.
+ */
+function revokeUser(uid) {
+  return new Promise((resolve, reject) => {
+    admin
+      .auth()
+      .revokeRefreshTokens(uid)
+      .then(() => {
+        resolve();
+      })
+      .catch((reason) => {
+        reject(reason);
+      });
+  });
+}
+
+program
+  .command("revoke <ids...>")
+  .aliases(["prevent"])
+  .description("revokes refresh tokens for the user", {
+    ids: "emails, phone numbers, and uids",
+  })
+  .action((ids) => {
+    const uidReqs = [];
+
+    ids.forEach((id) => {
+      const req = getUidById(id).catch((reason) => {
+        console.log(__("Couldn't fetch UID for ID %s: %s", id, reason.message));
+      });
+
+      uidReqs.push(req);
+    });
+
+    Promise.all(uidReqs)
+      .then((uids) => {
+        const toggleReqs = [];
+
+        uids.forEach((uid) => {
+          if (!uid) {
+            return;
+          }
+
+          const req = revokeUser(uid)
+            .then(() => {
+              console.log(__("Revoked refresh tokens for user %s.", uid));
+            })
+            .catch((reason) => {
+              console.log(
+                __(
+                  "Couldn't revoke refresh tokens for user %s: %s",
+                  uid,
+                  reason.message
+                )
+              );
+            });
+
+          toggleReqs.push(req);
+        });
+
+        Promise.all(toggleReqs)
+          .then(() => {
+            success();
+          })
+          .catch((reason) => {
+            error(reason.message);
+          });
+      })
+      .catch((reason) => {
+        error(reason.message);
+      });
+  });
+
 program
   .command("disable <ids...>")
   .aliases(["ban", "suspend"])
