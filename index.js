@@ -288,15 +288,15 @@ function createUser(newUser) {
 }
 
 program
-  .command("disable <ids>")
+  .command("disable <ids...>")
   .aliases(["ban", "suspend"])
   .description("prevents the users from signing in", {
-    ids: "comma-separated emails, phone numbers, and uids",
+    ids: "emails, phone numbers, and uids",
   })
   .action((ids) => {
     const uidReqs = [];
 
-    ids.split(",").forEach((id) => {
+    ids.forEach((id) => {
       const req = getUidById(id).catch((reason) => {
         console.log(__("Couldn't fetch UID for ID %s: %s", id, reason.message));
       });
@@ -340,15 +340,15 @@ program
   });
 
 program
-  .command("enable <ids>")
+  .command("enable <ids...>")
   .aliases(["unban"])
   .description("allows the users to sign in", {
-    ids: "comma-separated emails, phone numbers, and uids",
+    ids: "emails, phone numbers, and uids",
   })
   .action((ids) => {
     const uidReqs = [];
 
-    ids.split(",").forEach((id) => {
+    ids.forEach((id) => {
       const req = getUidById(id).catch((reason) => {
         console.log(__("Couldn't fetch UID for ID %s: %s", id, reason.message));
       });
@@ -392,15 +392,15 @@ program
   });
 
 program
-  .command("delete <ids>")
+  .command("delete <ids...>")
   .aliases(["remove"])
   .description("deletes users permanently from the app", {
-    ids: "comma-separated emails, phone numbers, or uids",
+    ids: "emails, phone numbers, or uids",
   })
   .action((ids) => {
     const uidReqs = [];
 
-    ids.split(",").forEach((id) => {
+    ids.forEach((id) => {
       const req = getUidById(id).catch((reason) => {
         console.log(__("Couldn't fetch UID for ID %s: %s", id, reason.message));
       });
@@ -444,10 +444,10 @@ program
   });
 
 program
-  .command("get <ids>")
+  .command("get <ids...>")
   .aliases(["fetch", "retrieve"])
   .description("retrieves info for each user", {
-    ids: "comma-separated emails, phone numbers, or uids",
+    ids: "emails, phone numbers, or uids",
   })
   .option(
     "-d --detailed",
@@ -456,7 +456,7 @@ program
   .action((ids, options) => {
     const getReqs = [];
 
-    ids.split(",").forEach((id) => {
+    ids.forEach((id) => {
       const req = getUserById(id).catch((reason) => {
         console.log(
           __("Couldn't fetch user for ID %s: %s", id, reason.message)
@@ -511,7 +511,7 @@ program
   .command("update <id>")
   .aliases(["change"])
   .description("updates the user's data", {
-    ids: "email, phone number, or uid",
+    id: "email, phone number, or uid",
   })
   .action((id) => {
     getUserById(id)
