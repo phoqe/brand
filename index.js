@@ -580,11 +580,14 @@ program
   .option("-f, --fake", "use fake data")
   .action((opts) => {
     if (opts.fake) {
+      const firstName = faker.name.firstName();
+      const lastName = faker.name.lastName();
+
       const newUser = {
-        email: faker.internet.email(),
+        email: faker.internet.email(firstName, lastName),
         emailVerified: false,
         password: faker.internet.password(),
-        displayName: faker.internet.userName(),
+        displayName: faker.internet.userName(firstName, lastName),
         photoURL: faker.image.avatar(),
         disabled: false,
       };
