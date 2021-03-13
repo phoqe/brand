@@ -654,24 +654,48 @@ program
   .command("create")
   .aliases(["add", "new"])
   .description("creates a new user")
-  .option("-f, --fake", "use fake data")
+  .option("-f, --fake <number>", "use fake data for a number of users")
   .action((opts) => {
     if (opts.fake) {
-      const firstName = faker.name.firstName();
-      const lastName = faker.name.lastName();
+      const createReqs = [];
 
-      const newUser = {
-        email: faker.internet.email(firstName, lastName),
-        emailVerified: false,
-        password: faker.internet.password(),
-        displayName: faker.internet.userName(firstName, lastName),
-        photoURL: faker.image.avatar(),
-        disabled: false,
-      };
+      for (let index = 0; index < opts.fake; index++) {
+        const firstName = faker.name.firstName();
+        const lastName = faker.name.lastName();
+        const email = faker.internet.email(firstName, lastName);
+        const password = faker.internet.password();
+        const displayName = faker.internet.userName(firstName, lastName);
+        const photoUrl = faker.image.avatar();
 
-      createUser(newUser)
-        .then((user) => {
-          success(__("Created user %s.", presentableName(user)));
+        const newUser = {
+          email: email,
+          emailVerified: false,
+          password: password,
+          displayName: displayName,
+          photoURL: photoUrl,
+          disabled: false,
+        };
+
+        const req = createUser(newUser)
+          .then((user) => {
+            console.log(__("Created user %s.", presentableName(user)));
+          })
+          .catch((reason) => {
+            console.log(
+              __(
+                "Couldn't create fake user %s: %s",
+                presentableName(newUser),
+                reason.message
+              )
+            );
+          });
+
+        createReqs.push(req);
+      }
+
+      Promise.all(createReqs)
+        .then(() => {
+          success();
         })
         .catch((reason) => {
           error(reason.message);
