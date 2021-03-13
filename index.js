@@ -288,6 +288,39 @@ function createUser(newUser) {
 }
 
 /**
+ * Creates a new Firebase user using fake data from Faker.
+ *
+ * @returns {Promise<admin.auth.UserRecord>} A promise containing the fake users data record.
+ */
+function createFakeUser() {
+  return new Promise((resolve, reject) => {
+    const firstName = faker.name.firstName();
+    const lastName = faker.name.lastName();
+    const email = faker.internet.email(firstName, lastName);
+    const password = faker.internet.password();
+    const displayName = faker.internet.userName(firstName, lastName);
+    const photoUrl = faker.image.avatar();
+
+    const newUser = {
+      email: email,
+      emailVerified: false,
+      password: password,
+      displayName: displayName,
+      photoURL: photoUrl,
+      disabled: false,
+    };
+
+    createUser(newUser)
+      .then((user) => {
+        resolve(user);
+      })
+      .catch((reason) => {
+        reject(reason);
+      });
+  });
+}
+
+/**
  * Revokes the user's refresh token. They may still have access to your app for one hour
  * since the last token has already been minted.
  *
@@ -660,23 +693,7 @@ program
       const createReqs = [];
 
       for (let index = 0; index < opts.fake; index++) {
-        const firstName = faker.name.firstName();
-        const lastName = faker.name.lastName();
-        const email = faker.internet.email(firstName, lastName);
-        const password = faker.internet.password();
-        const displayName = faker.internet.userName(firstName, lastName);
-        const photoUrl = faker.image.avatar();
-
-        const newUser = {
-          email: email,
-          emailVerified: false,
-          password: password,
-          displayName: displayName,
-          photoURL: photoUrl,
-          disabled: false,
-        };
-
-        const req = createUser(newUser)
+        const req = createFakeUser()
           .then((user) => {
             console.log(__("Created user %s.", presentableName(user)));
           })
