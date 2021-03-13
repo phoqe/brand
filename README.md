@@ -45,7 +45,7 @@ Here’s how you would disable a user with the email `lon_legros56@gmail.com`:
 brand disable lon_legros56@gmail.com
 ```
 
-You can supply an email, phone number, or UID for these arguments for commands using the `id` or `ids` argument. For example, when disabling multiple users:
+You can supply an email, phone number, or UID for commands using the `id` or `ids` argument. For example, when disabling multiple users:
 
 ```sh
 brand disable emilia.kilback35@yahoo.com +46762332652 IfqcusddgdPlsXqwiNLq9cestmo1
