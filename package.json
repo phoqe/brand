@@ -14,7 +14,7 @@
     "email": "phoqe@phoqe.dev"
   },
   "license": "MIT",
-  "private": false,
+  "private": true,
   "dependencies": {
     "commander": "^7.1.0",
     "dotenv": "^8.2.0",
