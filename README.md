@@ -4,6 +4,10 @@ The missing CLI for Firebase apps.
 
 ## Installation
 
+TODO
+
+## Setup
+
 ### Service Account
 
 Set `GOOGLE_APPLICATION_CREDENTIAL` to the path of your Service Account Key. You can generate one in Firebase Console under Project Settings. For example:
@@ -11,6 +15,21 @@ Set `GOOGLE_APPLICATION_CREDENTIAL` to the path of your Service Account Key. You
 ```sh
 export GOOGLE_APPLICATION_CREDENTIAL=path/to/serviceAccountKey.json
 ```
+
+### Locale
+
+You can set the default locale of Brand. The locale is used in command output and fake user data, e.g., first and last name. You can set the default locale using:
+
+```sh
+export DEFAULT_LOCALE=en
+```
+
+Brand supports the following locales for command output:
+
+- `en` (default)
+- `sv`
+
+Faker, the library for fake user data, supports these [locales](https://github.com/Marak/Faker.js#localization).
 
 ## Usage
 
