@@ -30,7 +30,7 @@ jobs:
         run: yarn install
 
       - name: Package
-        run: pkg .
+        run: npx pkg .
 
       - name: Release
         env:
