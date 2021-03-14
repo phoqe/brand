@@ -1,8 +1,10 @@
 # brand
 
-Brand is the missing CLI for apps using Firebase as its backend. I’ve used it for personal projects and decided to make it open-source.
+Brand is the missing CLI for apps using Firebase as its backend. I’ve used it for personal projects and decided to make it open-source. One useful feature is to create multiple fake accounts quickly and editing users with barely any setup.
 
 ## Installation
+
+There are multiple options for installing Brand, although only tested on macOS.
 
 ### Homebrew
 
@@ -38,12 +40,14 @@ You can set the default locale of Brand. The locale is used in command output an
 export DEFAULT_LOCALE=en
 ```
 
+The locales in use by Faker, the fake user data library, can be found [here](https://github.com/Marak/Faker.js#localization).
+
 Brand supports the following locales for command output:
 
 - `en` (default)
 - `sv`
 
-Faker, the library for fake user data, supports these [locales](https://github.com/Marak/Faker.js#localization).
+If Brand doesn’t support the locale, it will default to `en`.
 
 ## Usage
 
