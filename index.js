@@ -16,8 +16,10 @@ admin.initializeApp({
 const auth = admin.auth();
 
 const i18n = new I18n({
-  locales: ["en", "sv"],
-  directory: path.join(__dirname, "locales"),
+  staticCatalog: {
+    sv: require("./locales/sv.json"),
+    en: require("./locales/en.json"),
+  },
   defaultLocale: process.env.DEFAULT_LOCALE,
   register: global,
 });

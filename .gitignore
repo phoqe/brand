@@ -102,3 +102,8 @@ dist
 
 # TernJS port file
 .tern-port
+
+# binaries
+brand-linux
+brand-macos
+brand-win.exe

@@ -10,6 +10,9 @@
     "email": "phoqe@phoqe.dev",
     "url": "https://phoqe.dev"
   },
+  "bin": {
+    "brand": "./index.js"
+  },
   "bugs": {
     "email": "phoqe@phoqe.dev"
   },
@@ -24,13 +27,14 @@
     "inquirer": "^8.0.0"
   },
   "devDependencies": {
-    "semantic-release": "^17.4.0",
-    "prettier": "^2.2.1",
-    "lint-staged": "^10.5.4",
-    "husky": "^4.3.8",
     "@commitlint/cli": "^12.0.1",
     "@commitlint/config-conventional": "^12.0.1",
-    "@semantic-release/git": "^9.0.0"
+    "@semantic-release/git": "^9.0.0",
+    "husky": "^4.3.8",
+    "lint-staged": "^10.5.4",
+    "pkg": "^4.4.9",
+    "prettier": "^2.2.1",
+    "semantic-release": "^17.4.0"
   },
   "husky": {
     "hooks": {
@@ -67,7 +71,18 @@
           "failComment": false,
           "failTitle": false,
           "labels": false,
-          "releasedLabels": false
+          "releasedLabels": false,
+          "assets": [
+            {
+              "path": "./brand-linux"
+            },
+            {
+              "path": "./brand-macos"
+            },
+            {
+              "path": "./brand-win.exe"
+            }
+          ]
         }
       ]
     ]
