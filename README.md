@@ -4,16 +4,6 @@ Brand is the missing CLI for apps using Firebase as its backend. I’ve used it 
 
 ## Installation
 
-There are multiple options for installing Brand, although only tested on macOS.
-
-### Homebrew
-
-You can install it through Homebrew if you’re on macOS or Linux:
-
-```sh
-brew install phoqe/core/phoqe-brand
-```
-
 ### Clone and develop
 
 You can clone Brand and use it from its directory if you want to add more features specific to your needs. Simply use:
