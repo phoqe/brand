@@ -1,6 +1,6 @@
 {
   "name": "brand",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "The missing CLI for Firebase apps.",
   "homepage": "https://phoqe.dev",
   "main": "index.js",
