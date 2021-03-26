@@ -3,7 +3,7 @@
   "version": "1.1.0",
   "description": "The missing CLI for Firebase apps.",
   "homepage": "https://phoqe.dev",
-  "main": "index.js",
+  "main": "brand.js",
   "repository": "https://github.com/phoqe/brand.git",
   "author": {
     "name": "Linus Långberg",
@@ -11,7 +11,7 @@
     "url": "https://phoqe.dev"
   },
   "bin": {
-    "brand": "./index.js"
+    "brand": "./brand.js"
   },
   "bugs": {
     "email": "phoqe@phoqe.dev"
