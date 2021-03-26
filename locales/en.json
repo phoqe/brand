@@ -10,5 +10,6 @@
   "Updated user %s.": "Updated user %s.",
   "Created user %s.": "Created user %s.",
   "Couldn't revoke user %s: %s": "Couldn't revoke refresh tokens for user %s: %s",
-  "Revoked refresh tokens for user %s.": "Revoked refresh tokens for user %s."
+  "Revoked refresh tokens for user %s.": "Revoked refresh tokens for user %s.",
+  "Couldn't create fake user: %s": "Couldn't create fake user: %s"
 }

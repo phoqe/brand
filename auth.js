@@ -1,5 +1,6 @@
 const admin = require("firebase-admin");
 const { program } = require("commander");
+const faker = require("faker");
 
 const auth = admin.auth();
 
@@ -256,7 +257,8 @@ exports.createFakeUser = () => {
       disabled: false,
     };
 
-    createUser(newUser)
+    auth
+      .createUser(newUser)
       .then((user) => {
         resolve(user);
       })

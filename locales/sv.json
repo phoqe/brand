@@ -10,5 +10,6 @@
   "Updated user %s.": "Uppdaterade användare %s.",
   "Created user %s.": "Skapade användare %s.",
   "Couldn't revoke user %s: %s": "Kunde inte återkalla uppdateringstoken för användare %s: %s",
-  "Revoked refresh tokens for user %s.": "Återkallade uppdateringstoken för användare %s."
+  "Revoked refresh tokens for user %s.": "Återkallade uppdateringstoken för användare %s.",
+  "Couldn't create fake user: %s": "Kunde inte skapa fejkanvändare: %s"
 }
