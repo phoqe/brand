@@ -29,9 +29,6 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Package
-        run: npx pkg .
-
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
