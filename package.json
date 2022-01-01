@@ -33,7 +33,7 @@
     "commander": "^7.2.0",
     "dotenv": "^8.2.0",
     "faker": "^5.5.2",
-    "firebase-admin": "^9.6.0",
+    "firebase-admin": "^10.0.1",
     "i18n": "^0.13.2",
     "inquirer": "^8.0.0"
   },
